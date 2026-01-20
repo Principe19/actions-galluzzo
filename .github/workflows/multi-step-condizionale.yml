@@ -1,0 +1,41 @@
+name: Multi-Step Condizionale
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test-condizioni:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Step 1 - Always
+        run: echo "Step 1 always runs"
+
+      - name: Step 2 - Only if success
+        if: success()
+        run: echo "Step 2 runs only if previous steps succeeded"
+
+      - name: Step 3 - Simulate failure on main
+        run: |
+          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            echo "Simulating failure on main branch"
+            exit 1
+          else
+            echo "Success on other branches"
+          fi
+
+      - name: Step 4 - Only if failure
+        if: failure()
+        run: echo "Step 4 runs only if a previous step failed"
+
+      - name: Step 5 - Always
+        if: always()
+        run: echo "Step 5 always runs, regardless of previous results"
+
+      - name: Step 6 - Only on main branch
+        if: github.ref == 'refs/heads/main'
+        run: echo "Step 6 runs only on the main branch"
+
+      - name: Step 7 - Only on pull requests
+        if: github.event_name == 'pull_request'
+        run: echo "Step 7 runs only on pull requests"
