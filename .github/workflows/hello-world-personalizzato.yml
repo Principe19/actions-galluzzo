@@ -1,0 +1,27 @@
+name: Hello World Personalizzato
+run-name: ${{ github.actor }} sta testando GitHub Actions 
+on: [push]
+
+jobs:
+  hello-world:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Print repository info
+        run: |
+          echo "Repository: ${{ github.repository }}"
+          echo "SHA: ${{ github.sha }}"
+          echo "URL: ${{ github.repositoryUrl }}"
+          echo "Actor: ${{ github.actor }}"
+          echo "Commit message: ${{ github.event.head_commit.message }}"
+          echo "Author: ${{ github.event.head_commit.author.name }}"
+          echo "Workflow: ${{ github.workflow }}"
+          echo "Run ID: ${{ github.run_id }}"
+          echo "Date/Time: $(date)"
+      
+      - name: List modified files
+        run: |
+          echo "Modified files in the last commit:"
+          git show --name-only --pretty=format: HEAD | sed '/^$/d'
